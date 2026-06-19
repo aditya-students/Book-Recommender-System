@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Top 50 Books — The Bibliotheca{% endblock %}
+{% block meta_desc %}Explore the Top 50 most popular books, hand-curated from the world's finest literature at The Bibliotheca.{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+<!-- ═══ HERO SECTION ═══ -->
+<section class="hero-section">
+    <div class="hero-inner">
+        <h1 class="hero-heading">The Grand Collection — Top 50 Books</h1>
+        <p class="hero-subheading"><em>Timeless volumes, hand-curated from the world's finest literature</em></p>
+        <p class="hero-ornament" aria-hidden="true">❧ ✦ ❧</p>
+    </div>
+</section>
+
+<!-- ═══ FILTER BAR ═══ -->
+<section class="filter-bar">
+    <div class="filter-inner">
+        <span class="filter-count">✦ Showing <span id="showing-count">{{ book_name|length }}</span> of {{ book_name|length }} volumes</span>
+        <div class="filter-controls">
+            <select class="sort-dropdown" id="sort-dropdown" aria-label="Sort books">
+                <option value="ranking">Ranking</option>
+                <option value="rating-desc">Rating (High–Low)</option>
+                <option value="title-az">Title A–Z</option>
+            </select>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ BOOK CARDS GRID ═══ -->
+<section class="cards-section">
+    <div class="cards-grid" id="cards-grid">
+        {% for i in range(book_name|length) %}
+        <article class="book-card" data-rank="{{ i + 1 }}" data-title="{{ book_name[i] }}" data-rating="{{ '%.2f'|format(rating[i]) }}">
+            <!-- Spine bar -->
+            <div class="card-spine spine-color-{{ (i % 3) + 1 }}"></div>
+
+            <!-- Cover area -->
+            <div class="card-cover">
+                <img src="{{ image[i] }}" alt="Cover of {{ book_name[i] }}" class="cover-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="cover-fallback" style="display:none;">📚</div>
+                <span class="rank-badge">#{{ i + 1 }}</span>
+            </div>
+
+            <!-- Card body -->
+            <div class="card-body">
+                <h2 class="card-title" title="{{ book_name[i] }}">{{ book_name[i] }}</h2>
+                <p class="card-author"><em>{{ author[i] }}</em></p>
+                <div class="card-rating" aria-label="Rating: {{ '%.1f'|format(rating[i]) }} out of 5">
+                    {% set full_stars = rating[i]|round(0, 'floor')|int %}
+                    {% for s in range(full_stars) %}★{% endfor %}{% for s in range(5 - full_stars) %}☆{% endfor %}
+                    <span class="rating-num">{{ '%.1f'|format(rating[i]) }}</span>
+                </div>
+                <div class="card-meta">
+                    <span class="meta-badge votes-badge">{{ votes[i] }} votes</span>
+                </div>
+                <button class="btn-view-details" type="button" onclick="alert('Details for: {{ book_name[i]|replace("'", "\\'") }}')">View Details</button>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ═══ PAGINATION ═══ -->
+<section class="pagination-section">
+    <div class="pagination-inner">
+        <button class="page-btn active" data-page="1">1</button>
+        <button class="page-btn" data-page="2">2</button>
+        <button class="page-btn" data-page="3">3</button>
+        <button class="page-btn" data-page="4">4</button>
+        <button class="page-btn" data-page="5">5</button>
+    </div>
+</section>
+{% endblock %}
